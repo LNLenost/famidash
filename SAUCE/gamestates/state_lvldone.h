@@ -23,7 +23,7 @@ void state_lvldone() {
     pal_bg((char *)paletteMenu);
     pal_spr((char *)paletteMenu);
 
-	mmc3_set_8kb_chr(16);
+	mmc3_set_8kb_chr(20);
 
 	// Make an a nametable for the chain
     vram_adr(NAMETABLE_A);
@@ -130,7 +130,7 @@ void state_lvldone() {
 
 
 
-	famistudio_sfx_play(sfx_level_complete, 0);
+	sfx_play(sfx_level_complete, 0);
 
 	while (1) {
 		// Rather hacky, but when doing sprite zero at the bottom of the screen we DON'T 
@@ -201,7 +201,7 @@ void state_lvldone() {
 			if (pad_new[0] & PAD_START){
 				// pal_bg((char *)paletteDefault);
 				// pal_spr((char *)paletteDefaultSP);
-				famistudio_sfx_play(sfx_exit_level, 0);
+				sfx_play(sfx_exit_level, 0);
 				music_update();
 				gameState = 1;
 				menuselection = 0;

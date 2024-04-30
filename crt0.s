@@ -7,6 +7,7 @@
 .exportzp _VRAM_UPDATE := VRAM_UPDATE
 
     .export _exit,__STARTUP__:absolute=1
+	.export _PAL_BUF := PAL_BUF, _PAL_UPDATE := PAL_UPDATE
 	.import push0,popa,popax,_main,zerobss,copydata
 
 ; Linker generated symbols
@@ -294,9 +295,25 @@ _famistudio_state = *
 .export _GAME_CHR
 _GAME_CHR:
 	.incbin "GRAPHICS/famidash.chr" ; 8kb
-	.incbin "GRAPHICS/famidash-parallax.chr" ; 4kb
-	.incbin "GRAPHICS/menus.chr"    ; 4kb
-	.incbin "GRAPHICS/levelcomplete.chr"    ; 4kb
+;    .incbin "GRAPHICS/bankmain.chr" ; 1kb
+ ;   .incbin "GRAPHICS/bankgamemodes1.chr" ; 1kb
+  ;  .incbin "GRAPHICS/bankmain.chr" ; 1kb
+;    .incbin "GRAPHICS/bankgamemodes2.chr" ; 1kb
+ ;   .incbin "GRAPHICS/bankmain.chr" ; 1kb
+  ;  .incbin "GRAPHICS/bankgamemodes3.chr" ; 1kb
+;    .incbin "GRAPHICS/bankmain.chr" ; 1kb
+ ;   .incbin "GRAPHICS/bankgamemodes4.chr" ; 1kb
+  ;  .incbin "GRAPHICS/bankmain.chr" ;1kb
+;    .incbin "GRAPHICS/bankmini.chr" ; 1kb
+ ;   .incbin "GRAPHICS/bankmain.chr" ; 1kb
+  ;  .incbin "GRAPHICS/bankmini2.chr" ; 1kb
+;    .incbin "GRAPHICS/bankportals.chr" ; 1kb
+ ;   .incbin "GRAPHICS/bankblank.chr" ; 1kb
+
+    .incbin "GRAPHICS/famidash-parallax.chr" ; 4kb
+    .incbin "GRAPHICS/menus.chr"    ; 4kb
+    .incbin "GRAPHICS/menuicons.chr"    ; 4kb
+    .incbin "GRAPHICS/levelcomplete.chr"    ; 4kb
 .segment "PARALLAXCHR"
 .export _PARALLAX_CHR
 _PARALLAX_CHR:

@@ -5,77 +5,41 @@
 
 void wave_movement(void){
 
-	if(!(pad[controllingplayer] & PAD_A)) {
-		if(!mini){
-			if(!player_gravity[currplayer]){
-				if(player_vel_y[currplayer] > CUBE_MAX_FALLSPEED){
-					player_vel_y[currplayer] = CUBE_MAX_FALLSPEED;
-				} else player_vel_y[currplayer] = CUBE_MAX_FALLSPEED/4;
-			}
-			else{
-				if(player_vel_y[currplayer] < -CUBE_MAX_FALLSPEED){
-					player_vel_y[currplayer] = -CUBE_MAX_FALLSPEED;
-				} else player_vel_y[currplayer] = -CUBE_MAX_FALLSPEED/4;
-			}
+	if(!mini){
+		if(currplayer_gravity){
+			currplayer_vel_y = -currplayer_vel_x;
 		}
-		else {
-			if(!player_gravity[currplayer]){
-				if(player_vel_y[currplayer] > MINI_CUBE_MAX_FALLSPEED){
-					player_vel_y[currplayer] = MINI_CUBE_MAX_FALLSPEED;
-				} else player_vel_y[currplayer] = MINI_CUBE_MAX_FALLSPEED/4;
-			}
-			else{
-				if(player_vel_y[currplayer] < -MINI_CUBE_MAX_FALLSPEED){
-					player_vel_y[currplayer] = -MINI_CUBE_MAX_FALLSPEED;
-				} else player_vel_y[currplayer] = -MINI_CUBE_MAX_FALLSPEED/4;
-			}
-		}		
+		else{
+			currplayer_vel_y = currplayer_vel_x;
+		}
 	}
-
-	player_y[currplayer] += player_vel_y[currplayer];
+	else {
+		if(currplayer_gravity){
+			currplayer_vel_y = -(currplayer_vel_x << 1);
+		}
+		else{
+			currplayer_vel_y = currplayer_vel_x << 1;
+		}
+	}		
 	
-	Generic.x = high_byte(player_x[currplayer]);
+	if (pad[controllingplayer] & PAD_A) currplayer_vel_y = -currplayer_vel_y;
+
+	currplayer_y += currplayer_vel_y;
+	
+	Generic.x = high_byte(currplayer_x);
 	
 	// this literally offsets the collision down 1 pixel for the vel reset to happen every frame instead of each other frame
-	Generic.y = high_byte(player_y[currplayer]);
+	Generic.y = high_byte(currplayer_y);
 	
-	if(!player_gravity[currplayer]){
-//		if(bg_coll_D()){ // check collision below
-//			high_byte(player_y[currplayer]) -= eject_D;
-//			player_vel_y[currplayer] = 0;
+	
+	bg_coll_U();
 
-			if(pad[controllingplayer] & PAD_A) {
-				//player_gravity[currplayer] = 1;
-					player_vel_y[currplayer] = -CUBE_MAX_FALLSPEED/4;
-				//	Generic.y = high_byte(player_y[currplayer]); // the rest should be the same
-	//			high_byte(player_y[currplayer]) -= eject_U;
-	//			player_vel_y[currplayer] = 0;
-			}
-//		}
-	} else {
-		//if(bg_coll_U()){ // check collision above
-		//	high_byte(player_y[currplayer]) -= eject_U;
-		//	player_vel_y[currplayer] = 0;
-
-			if(pad[controllingplayer] & PAD_A) {
-//				player_gravity[currplayer] = 0;
-
-					player_vel_y[currplayer] = CUBE_MAX_FALLSPEED/4;
-				//	Generic.y = high_byte(player_y[currplayer]); // the rest should be the same
-
-		//		high_byte(player_y[currplayer]) -= eject_D;
-				
-		//		player_vel_y[currplayer] = 0;
+	bg_coll_D();
 
 
-			}
-		//} 
-	}
+	Generic.y = high_byte(currplayer_y);
 
-	// check collision down a little lower than CUBE
-	Generic.y = high_byte(player_y[currplayer]); // the rest should be the same
-
-	if (player_vel_y[currplayer] != 0){
+	if (currplayer_vel_y != 0){
 		if(pad_new[controllingplayer] & PAD_A) {
 			cube_data[currplayer] |= 2;
 		}

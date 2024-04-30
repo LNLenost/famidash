@@ -33,6 +33,15 @@
 #define INSANE 4
 #define DEMON 5
 
+const unsigned char difficulty_pal[] ={
+	0x21, 0x16, // easy
+    0x2A, 0x30, // normal
+    0x30, 0x28, // hard
+	0x16, 0x30, // harder
+    0x25, 0x16, // insane
+    0x16, 0x30 // KING DEDEdemon
+};
+
 const unsigned char difficulty_list[] = {
     EASY,
     EASY,
@@ -43,6 +52,7 @@ const unsigned char difficulty_list[] = {
     HARDER,
     HARDER,
     HARDER,
+    INSANE,
     INSANE,
     INSANE,
     EASY,
@@ -63,6 +73,7 @@ const unsigned char stars_list[] = {
 	9,
 	10,
 	11,
+	12,
 	0,
 	0,
 	0,

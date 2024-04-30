@@ -31,6 +31,19 @@ void __fastcall__ music_play(unsigned char song);
 void __fastcall__ music_update (void);
 
 /**
+ * ======================================================================================================================
+ * famistudio_sfx_play (public)
+ * 
+ * Plays a sound effect.
+ * 
+ * [in] sfx_index: Sound effect index (0...127)
+ * [in] channel: Offset of sound effect channel, should be FAMISTUDIO_SFX_CH0..FAMISTUDIO_SFX_CH3
+ * ======================================================================================================================
+ */
+
+void __fastcall__ sfx_play(unsigned char sfx_index, unsigned char channel);
+
+/**
  * Update the PPU using the VRAM buffer with a single tile repeated LENGTH number of times.
  * Length must not be greater than 0x7f!
  */
@@ -69,11 +82,11 @@ extern unsigned char parallax_scroll_column_start;
 
 // get specific byte from a word array
 #define idx16_lo(arr, idx) (*((char *)arr+((idx<<1))))
-#define idx16_hi(arr, idx) (*((char *)arr+((idx<<1)|1)))
+#define idx16_hi(arr, idx) (*((char *)(arr+1)+((idx<<1))))
 
 // same as above but idx < 128
-#define idx16_lo_NOC(arr, idx) (*((char *)arr+(((idx<<1)&0xFF))))
-#define idx16_hi_NOC(arr, idx) (*((char *)arr+(((idx<<1)&0xFF)|1)))
+#define idx16_lo_NOC(arr, idx) (*((char *)arr+(byte(idx<<1))))
+#define idx16_hi_NOC(arr, idx) (*(((char *)(arr)+1)+(byte(idx<<1))))
 
 // store a word's high and low bytes into separate places
 #define storeWordSeparately(word, low, high) \
@@ -81,4 +94,20 @@ extern unsigned char parallax_scroll_column_start;
                             __asm__("STA %v", low), \
                             __asm__("STX %v", high))
 
-#define pal_fade_to_withmusic(from, to) (auto_fs_updates = 1, pal_fade_to(from, to), auto_fs_updates = 0)
+#define pal_fade_to_withmusic(from, to) (++auto_fs_updates, pal_fade_to(from, to), auto_fs_updates = 0)
+
+// Yes i had to actually fucking use inline asm to get this to run fast
+#define store_short_arr_NOC(arr, idx, word) ( \
+    __A__ = idx<<1, \
+    __asm__("tay"), \
+    __A__ = low_byte(word), \
+    __asm__("sta %v,y", arr), \
+    __A__ = high_byte(word), \
+    __asm__("sta %v+1, y", arr))
+
+// set palette color, index 0..31
+// completely inlines and replaces neslib's
+extern unsigned char PAL_UPDATE;
+extern char PAL_BUF[32];
+#pragma zpsym("PAL_UPDATE")
+#define pal_col(index, color) (PAL_BUF[index&0x1F] = color, ++PAL_UPDATE)

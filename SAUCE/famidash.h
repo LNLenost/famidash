@@ -7,10 +7,12 @@
 #define ORB_HEIGHT_YELLOW_UPSIDE -0x4E0
 #define ORB_HEIGHT_YELLOW -0x5B0
 #define ORB_HEIGHT_YELLOW_MINI -0x4D0
+#define ORB_HEIGHT_PINK -0x3B0
 #define PAD_HEIGHT_YELLOW -0x7A0
 #define PAD_HEIGHT_YELLOW_MINI -0x5B0
 #define PAD_HEIGHT_BALL_YELLOW -0x6A0
-#define PAD_HEIGHT_PINK -0x2B0
+#define PAD_HEIGHT_PINK -0x3B0
+#define PAD_HEIGHT_PINK_MINI -0x350
 #define PAD_HEIGHT_BLUE -0x3A0
 
 #define ORB_BALL_HEIGHT_BLUE -0x1A0
@@ -20,6 +22,12 @@
 
 #define MINI_CUBE_WIDTH 0x08
 #define MINI_CUBE_HEIGHT 0x07
+
+#define WAVE_WIDTH 0x08
+#define WAVE_HEIGHT 0x06
+
+#define MINI_WAVE_WIDTH 0x04
+#define MINI_WAVE_HEIGHT 0x06
 
 #define JUMP_VEL -0x590
 #define MINI_JUMP_VEL -0x4D0
@@ -77,9 +85,14 @@ long unsigned int tmplong;
 unsigned char selectedbgm;
 unsigned char selectedsfx;
 
-
 #pragma zpsym("tmpptr1")
 #pragma zpsym("tmpptr2")
+
+unsigned short currplayer_x;
+unsigned short currplayer_y;
+signed short currplayer_vel_x;
+signed short currplayer_vel_y;
+unsigned char currplayer_gravity;
 
 unsigned char pad[2];
 unsigned char pad_new[2];
@@ -129,7 +142,7 @@ unsigned char * level_data;
 #pragma bss-name(push, "SRAM")
 unsigned char SRAM_VALIDATE[4];
 
-#define LEVEL_COUNT 0x0F
+#define LEVEL_COUNT 0x10
 unsigned char coin1_obtained[LEVEL_COUNT];
 unsigned char coin2_obtained[LEVEL_COUNT];
 unsigned char coin3_obtained[LEVEL_COUNT];
@@ -137,12 +150,18 @@ unsigned char coin3_obtained[LEVEL_COUNT];
 unsigned char LEVELCOMPLETE[LEVEL_COUNT];
 
 unsigned char invisible;
-unsigned char PRACTICE_ENABLED;
+unsigned char PRACTICE_ENABLED = 1;
 unsigned char twoplayer;
 unsigned char oneptwoplayer;
-unsigned char deathsound;
 unsigned char jumpsound;
 unsigned char platformer;
+unsigned char musicoff;
+unsigned char sfxoff;
+
+unsigned char color1;
+unsigned char color2;
+unsigned char color3;
+
 
 unsigned char practice_famistudio_state[0xbf];
 
@@ -159,6 +178,9 @@ unsigned char TOTALATTEMPTSHUNDREDS;
 unsigned char TOTALATTEMPTSTHOUSANDS;
 unsigned char TOTALCOINSTENS;
 unsigned char TOTALCOINSONES;
+unsigned char TOTALSTARSONES;
+unsigned char TOTALSTARSTENS;
+
 
 unsigned short player_x[2];
 unsigned short player_y[2];
@@ -178,12 +200,12 @@ unsigned char speed;
 unsigned char shuffle_offset;
 unsigned char count;
 unsigned char coins;
+unsigned char currplayer;
 unsigned char kandotemp;
 unsigned char kandotemp2[2];
 unsigned char kandotemp5;
 unsigned char kandoframecnt;
 unsigned long attempts;
-unsigned char currplayer;
 unsigned char controllingplayer;
 unsigned char spiderframe[2];
 unsigned char robotframe[2];
@@ -235,7 +257,6 @@ unsigned char activesprites_active[max_loaded_sprites];
 
 
 
-
 unsigned char DEBUG_MODE = 0;
 
 
@@ -283,8 +304,8 @@ const unsigned char paletteDefault[16] = {
 const unsigned char paletteDefaultSP[16]={
 	0x00,0x0f,0x2a,0x21,
 	0x00,0x0f,0x24,0x28,
-	0x00,0x0f,0x26,0x30,
-	0x00,0x14,0x24,0x24 
+	0x00,0x0f,0x16,0x30,
+	0x00,0x0f,0x2a,0x21,
 };
 
 const unsigned char paletteMenu[16] = {
